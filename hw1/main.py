@@ -10,6 +10,7 @@ import utils
 
 
 class Individual:
+    # Implement Individual class.
     def __init__(self, name, talent, init_capital, location):
         self.name = name
         self.talent = float(talent)
@@ -30,6 +31,9 @@ class Individual:
         :return:
         """
         # encounter means distance between individual and incident is <= 1
+        # incident_record is a list. Each element is a list:[incident_time, flag, capital]
+        # flag is a signal of incident type. 1 indicates one gain capital, 0 indicates no changes,
+        # -1 indicates one lose capital
         if np.linalg.norm(self.location - incident_location) <= 1:
             if is_lucky:
                 # talent_boundary is the lower boundary that an individual can benefit from a lucky incident
@@ -42,20 +46,24 @@ class Individual:
                 self.incident_record.append([incident_time, -1, self.capital])
                 self.unlucky_incident_num = self.unlucky_incident_num + 1
 
-    def generate_full_incident_record(self, incident_num):
+    def get_full_incident_record(self, incident_num):
         """
         Generate the full incident and capital record of an individual.
-        :param incident_num: total incident num
-        :return:
+        :param incident_num: total incident num, should be equal to sim_time / time_interval
+        :return: full_incident_record. First col is incident number. Second column is incident type. 0 means
+        no incident. 1 means lucky incident. -1 means unlucky incident. Third column is capital record.
         """
         full_incident_record = np.zeros((incident_num, 3), dtype=float)
         full_incident_record[:, 0] = np.array([(i + 1) for i in range(1, incident_num + 1)])
+        # fill the full record with list record.
         for record in self.incident_record:
             full_incident_record[record[0] - 1, :] = record
         for i in range(1, incident_num):
+            # no incident happens to an individual. his capital remains same.
             if np.abs(full_incident_record[i, 2] - 0) < 1e-10:
                 full_incident_record[i, 2] = full_incident_record[i - 1, 2]
         self.full_incident_record = full_incident_record
+        return full_incident_record
 
 
 class Incident:
@@ -80,7 +88,7 @@ class Incident:
 
 def main():
     # environment parameter setting
-    sim_time = 1
+    sim_time = 40
     time_interval = 0.5
     max_boundary_x = 201
     max_boundary_y = 201
@@ -100,7 +108,8 @@ def main():
     move_length = 2
 
     # save result setting
-    savepath = './hw1/result/'
+    savepath = './result/'
+    image_format = '.png'
 
     # initial the talent, location distribution and incident move direction set. Direction unit is degree.
     talent_set = utils.generate_distribution(size=individual_num,
@@ -151,33 +160,37 @@ def main():
                                                              incident_location=incident_set[inc_index].location,
                                                              is_lucky=incident_set[inc_index].islucky,
                                                              talent_boundary=np.random.rand())
-        print('No.%d incident happen.' % (epoch + 1))
+        print('No.%d incidents happen.' % (epoch + 1))
     end = time.time()
     runtime = end - start
     print('Simulation finishes. Total time:%dh%dm%ds' % (runtime // 3600, runtime % 3600 // 60, runtime % 3600 % 60))
 
     # save result & draw figure
-
     final_capital_set = np.array([individual_set[i].capital for i in range(individual_num)])
     lucky_incident_set = np.array([individual_set[i].lucky_incident_num for i in range(individual_num)])
     unlucky_incident_set = np.array([individual_set[i].unlucky_incident_num for i in range(individual_num)])
-    # np.save(savepath + 'talent_set.npy', talent_set)
-    # np.save(savepath + 'individual_location_set.npy', individual_location_set)
-    # np.save(savepath + 'incident_location_set.npy', incident_location_set)
-    # np.save(savepath + 'final_capital_set.npy', final_capital_set)
-    # np.save(savepath + 'lucky_incident_set.npy', lucky_incident_set)
-    # np.save(savepath + 'unlucky_incident_set.npy', unlucky_incident_set)
+    full_incident_set = np.array([individual_set[i].get_full_incident_record(int(sim_time / time_interval))
+                                  for i in range(individual_num)])
     draw_result.save_init(savepath)
+    np.save(savepath + 'talent_set.npy', talent_set)
+    np.save(savepath + 'individual_location_set.npy', individual_location_set)
+    np.save(savepath + 'incident_location_set.npy', incident_location_set)
+    np.save(savepath + 'final_capital_set.npy', final_capital_set)
+    np.save(savepath + 'lucky_incident_set.npy', lucky_incident_set)
+    np.save(savepath + 'unlucky_incident_set.npy', unlucky_incident_set)
     draw_result.static_initial_location(individual_location_set,
                                         incident_location_set,
                                         max_boundary_x,
                                         max_boundary_y,
                                         lucky_percentage,
-                                        savepath)
-    draw_result.static_talent(talent_set, savepath)
-    draw_result.static_capital_individual_num(final_capital_set, savepath)
-    draw_result.static_capital_talent(final_capital_set, talent_set, savepath)
-    draw_result.static_capital_incident(final_capital_set, lucky_incident_set, unlucky_incident_set, savepath)
+                                        savepath,
+                                        image_format)
+    draw_result.static_talent(talent_set, savepath, image_format)
+    draw_result.static_capital_individual_num(final_capital_set, savepath, image_format)
+    draw_result.static_capital_talent(final_capital_set, talent_set, savepath, image_format)
+    draw_result.static_capital_incident(final_capital_set, lucky_incident_set, unlucky_incident_set, savepath,
+                                        image_format)
+    draw_result.select_richest_poorest(talent_set, final_capital_set, full_incident_set, savepath, image_format)
     plt.show()
 
 

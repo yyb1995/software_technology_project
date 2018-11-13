@@ -7,11 +7,11 @@ from scipy.optimize import curve_fit
 def save_init(savepath):
     if not os.path.exists(savepath):
         os.mkdir(savepath)
-    plt.rcParams['font.size'] = 20
+    plt.rcParams['font.size'] = 16
 
 
 # static picture section
-def static_initial_location(ind_loc_set, inc_loc_set, max_x, max_y, lucky_percentage, savepath):
+def static_initial_location(ind_loc_set, inc_loc_set, max_x, max_y, lucky_percentage, savepath, image_format):
     fig1 = plt.figure(1, figsize=(12, 12), dpi=100)
     plt.scatter(ind_loc_set[:, 0], ind_loc_set[:, 1], color='k', marker='^', linewidths=2, label='individual')
     plt.scatter(inc_loc_set[:int(inc_loc_set.shape[0] * lucky_percentage), 0],
@@ -24,11 +24,11 @@ def static_initial_location(ind_loc_set, inc_loc_set, max_x, max_y, lucky_percen
     plt.ylim(0, max_y)
     plt.legend(bbox_to_anchor=(0.15, 0), loc="lower left", bbox_transform=fig1.transFigure, ncol=3)
     plt.title('Initial location of individual and incident')
-    plt.savefig(savepath + 'initial_location.svg')
+    plt.savefig(savepath + 'initial_location' + image_format)
     plt.draw()
 
 
-def static_talent(tal_set, savepath):
+def static_talent(tal_set, savepath, image_format):
     xaxis_min = 0.2
     xaxis_max = 1.0
     step = 0.01
@@ -38,11 +38,11 @@ def static_talent(tal_set, savepath):
     plt.xticks(np.arange(xaxis_min, xaxis_max + xaxis_step, xaxis_step), fontsize=14)
     plt.xlabel('mean = %.2f   standard_variance = %.2f' % (tal_set.mean(), tal_set.std()))
     plt.title('Initial talent distribution')
-    plt.savefig(savepath + 'static_talent.svg')
+    plt.savefig(savepath + 'static_talent' + image_format)
     plt.draw()
 
 
-def static_capital_individual_num(capital_set, savepath):
+def static_capital_individual_num(capital_set, savepath, image_format):
     def linear_func(x, k, b):
         return x * k + b
 
@@ -84,11 +84,11 @@ def static_capital_individual_num(capital_set, savepath):
     plt.ylim(0.5, len(capital_set))
     plt.loglog()
     # plt.tight_layout()
-    plt.savefig(savepath + 'static_capital_individual_num.svg')
+    plt.savefig(savepath + 'static_capital_individual_num' + image_format)
     plt.draw()
 
 
-def static_capital_talent(cap_set, tal_set, savepath):
+def static_capital_talent(cap_set, tal_set, savepath, image_format):
     curve_set = np.concatenate((tal_set.reshape(1, -1), cap_set.reshape(1, -1)), axis=0)
     curve_set_sorted = curve_set[:, curve_set[0].argsort()]
     plt.figure(4, figsize=(12, 8), dpi=100)
@@ -98,11 +98,11 @@ def static_capital_talent(cap_set, tal_set, savepath):
     plt.xlabel('talent')
     plt.ylabel('capital')
     plt.title('Talent & capital distribution')
-    plt.savefig(savepath + 'static_capital_talent.svg')
+    plt.savefig(savepath + 'static_capital_talent' + image_format)
     plt.draw()
 
 
-def static_capital_incident(cap_set, lucky_set, unlucky_set, savepath):
+def static_capital_incident(cap_set, lucky_set, unlucky_set, savepath, image_format):
     lucky_curve_set = np.concatenate((lucky_set.reshape(1, -1), cap_set.reshape(1, -1)), axis=0)
     unlucky_curve_set = np.concatenate((unlucky_set.reshape(1, -1), cap_set.reshape(1, -1)), axis=0)
     lucky_curve_set_sorted = lucky_curve_set[:, lucky_curve_set[0].argsort()]
@@ -121,7 +121,44 @@ def static_capital_incident(cap_set, lucky_set, unlucky_set, savepath):
     plt.setp(stemlines, color='r', linewidth=1)
     plt.xlabel('unlucky incident num')
     plt.ylabel('capital')
-    plt.savefig(savepath + 'static_capital_incident.svg')
+    plt.savefig(savepath + 'static_capital_incident' + image_format)
+
+
+def select_richest_poorest(talent_set, final_capital_set, full_incident_set, savepath, image_format):
+    # get the richest and poorest individual's capital and incident information
+    # full_incident_set: shape is (individual_num, incident_num, 3)
+    richest_num = np.argmax(final_capital_set)
+    poorest_num = np.argmin(final_capital_set)
+    richest_record = full_incident_set[richest_num, ::]
+    poorest_record = full_incident_set[poorest_num, ::]
+    richest_lucky_record = (richest_record[:, 1] == 1).astype(int)
+    richest_unlucky_record = (richest_record[:, 1] == -1).astype(int)
+    poorest_lucky_record = (poorest_record[:, 1] == 1).astype(int)
+    poorest_unlucky_record = (poorest_record[:, 1] == -1).astype(int)
+    plt.figure(6, figsize=(12, 12), dpi=100)
+    plt.subplot(211)
+    plt.plot(richest_record[:, 2])
+    plt.title('richest individual capital record\ntalent:{0:.3f}'.format(talent_set[richest_num]))
+    plt.subplot(212)
+    plt.plot(richest_lucky_record, color='g', label='lucky')
+    plt.plot(richest_unlucky_record, color='r', label='unlucky')
+    plt.legend(loc='upper right')
+    plt.title('richest individual incident record')
+    plt.tight_layout()
+    plt.savefig(savepath + 'richest individual record' + image_format)
+    plt.draw()
+    fig7 = plt.figure(7, figsize=(12, 12), dpi=100)
+    plt.subplot(211)
+    plt.plot(poorest_record[:, 2])
+    plt.title('poorest individual capital record\ntalent:{}'.format(talent_set[poorest_num]))
+    plt.subplot(212)
+    plt.plot(poorest_lucky_record, color='g', label='lucky')
+    plt.plot(poorest_unlucky_record, color='r', label='unlucky')
+    plt.legend(loc='upper right')
+    plt.title('poorest individual incident record')
+    plt.tight_layout()
+    plt.savefig(savepath + 'poorest individual record' + image_format)
+    plt.draw()
 
 
 # animation section
@@ -132,8 +169,10 @@ def anime_incident_location():
 def anime_capital_individual_num():
     pass  # TODO: Implement capital individual figure movement
 
+
 def anime_capital_talent():
     pass  # TODO: Implement capital talent figure movement
+
 
 def anime_capital_lucky_incident():
     pass  # TODO: Implement capital lucky figure movement
