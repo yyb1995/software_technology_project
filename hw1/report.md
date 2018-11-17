@@ -1,16 +1,24 @@
 # 报告
 
-* 1. [背景介绍](#)
-* 2. [仿真实验设计](#-1)
-	* 2.1. [实验环境和初始条件](#-1)
-	* 2.2. [随机事件对财富的作用](#-1)
-	* 2.3. [随机事件的移动](#-1)
-	* 2.4. [其他仿真参数](#-1)
-* 3. [程序结构](#-1)
-* 4. [仿真结果和分析](#-1)
-* 5. [结论](#-1)
-* 6. [参考文献](#-1)
-* 7. [附录](#-1)
+<!-- TOC -->
+
+- [报告](#报告)
+    - [1. 背景介绍](#1-背景介绍)
+    - [2. 仿真实验设计](#2-仿真实验设计)
+        - [2.1 实验环境和初始条件](#21-实验环境和初始条件)
+        - [2.2 随机事件对财富的作用](#22-随机事件对财富的作用)
+        - [2.3 随机事件的移动](#23-随机事件的移动)
+        - [2.4 其他仿真参数](#24-其他仿真参数)
+    - [3 程序结构](#3-程序结构)
+    - [4 仿真结果和分析](#4-仿真结果和分析)
+        - [1. 初始条件仿真结果](#1-初始条件仿真结果)
+        - [2. 总体财富分布](#2-总体财富分布)
+        - [3. 天赋与财富的关系](#3-天赋与财富的关系)
+    - [5 结论](#5-结论)
+    - [6 参考文献](#6-参考文献)
+    - [7. 附录](#7-附录)
+
+<!-- /TOC -->
 
 ## 1. 背景介绍
 在我们的传统观念中，一个人的成功主要取决于个人修为，例如智商、技能、天赋、努力程度和冒险精神等。而运气等外在因素有时只是锦上添花，只在一定程度上影响着财富的多少和社会地位的高低等。但是，最近arxiv上一篇论文通过一系列仿真实验，验证了一个在很多人看来有些不可思议的结论，那就是运气在一个人的成功中也扮演着不可忽视的作用。  
@@ -76,16 +84,20 @@ $$
 ### 1. 初始条件仿真结果
 在初始条件中，包括初始实验人群和随机事件分布以及智商分布。这两个仿真结果如下两图所示。
 
-初始实验个体和随机事件位置分布：
-![](https://github.com/yyb1995/software_technology_project/blob/release/hw1/result/initial_location.png?raw=true)
+*初始实验个体和随机事件位置分布*
+![](https://raw.githubusercontent.com/yyb1995/software_technology_project/release/hw1/result/initial_location.png)
 
-初始天赋分布：
-![](https://github.com/yyb1995/software_technology_project/blob/release/hw1/result/static_talent.png?raw=true)
+*初始天赋分布*
+![](https://raw.githubusercontent.com/yyb1995/software_technology_project/release/hw1/result/static_talent.png)
 
 从实验条件得知，实验人群和随机事件位置分布服从均匀分布，初始天赋分布服从正态分布。因此大部分实验个体的天赋分布集中在0.6附近。
 
-### 2. 
-![](https://github.com/yyb1995/software_technology_project/blob/release/hw1/result/static_capital_talent.png?raw=true)
+### 2. 总体财富分布
+
+### 3. 天赋与财富的关系
+*最终财富分布与天赋的关系*
+![](https://raw.githubusercontent.com/yyb1995/software_technology_project/release/hw1/result/static_capital_talent.png) 
+从两个角度分析上图。第一：总体上看，财富较多的群体更多地分布在智商在均值之上的群体中。这个结论说明智商较高有助于从辛运事件中获利。第二：财富最多
 
 ## 5 结论
 
