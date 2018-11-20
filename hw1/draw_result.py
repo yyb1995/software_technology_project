@@ -145,7 +145,7 @@ def select_richest_poorest(talent_set, final_capital_set, full_incident_set, sav
     plt.legend(loc='upper right')
     plt.title('richest individual incident record')
     plt.tight_layout()
-    plt.savefig(savepath + 'richest individual record' + image_format)
+    plt.savefig(savepath + 'richest_individual_record' + image_format)
     plt.draw()
     fig7 = plt.figure(7, figsize=(12, 12), dpi=100)
     plt.subplot(211)
@@ -157,7 +157,7 @@ def select_richest_poorest(talent_set, final_capital_set, full_incident_set, sav
     plt.legend(loc='upper right')
     plt.title('poorest individual incident record')
     plt.tight_layout()
-    plt.savefig(savepath + 'poorest individual record' + image_format)
+    plt.savefig(savepath + 'poorest_individual_record' + image_format)
     plt.draw()
 
 
