@@ -46,21 +46,23 @@ class Individual:
                 self.incident_record.append([incident_time, -1, self.capital])
                 self.unlucky_incident_num = self.unlucky_incident_num + 1
 
-    def get_full_incident_record(self, incident_num):
+    def get_full_incident_record(self, incident_num, init_capital):
         """
         Generate the full incident and capital record of an individual.
         :param incident_num: total incident num, should be equal to sim_time / time_interval
+        :param init_capital:initial capital
         :return: full_incident_record. First col is incident number. Second column is incident type. 0 means
         no incident. 1 means lucky incident. -1 means unlucky incident. Third column is capital record.
         """
         full_incident_record = np.zeros((incident_num, 3), dtype=float)
+        full_incident_record[:, 2] = init_capital * np.ones(full_incident_record.shape[0], dtype=float)
         full_incident_record[:, 0] = np.array([(i + 1) for i in range(1, incident_num + 1)])
         # fill the full record with list record.
         for record in self.incident_record:
             full_incident_record[record[0] - 1, :] = record
         for i in range(1, incident_num):
             # no incident happens to an individual. his capital remains same.
-            if np.abs(full_incident_record[i, 2] - 0) < 1e-10:
+            if np.abs(full_incident_record[i, 2] - 10) < 1e-10:
                 full_incident_record[i, 2] = full_incident_record[i - 1, 2]
         self.full_incident_record = full_incident_record
         return full_incident_record
@@ -169,7 +171,7 @@ def main():
     final_capital_set = np.array([individual_set[i].capital for i in range(individual_num)])
     lucky_incident_set = np.array([individual_set[i].lucky_incident_num for i in range(individual_num)])
     unlucky_incident_set = np.array([individual_set[i].unlucky_incident_num for i in range(individual_num)])
-    full_incident_set = np.array([individual_set[i].get_full_incident_record(int(sim_time / time_interval))
+    full_incident_set = np.array([individual_set[i].get_full_incident_record(int(sim_time / time_interval), initial_capital)
                                   for i in range(individual_num)])
     draw_result.save_init(savepath)
     np.save(savepath + 'talent_set.npy', talent_set)
