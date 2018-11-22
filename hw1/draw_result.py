@@ -2,6 +2,7 @@ import numpy as np
 import os
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
+from scipy import stats
 
 
 def save_init(savepath):
@@ -147,7 +148,7 @@ def select_richest_poorest(talent_set, final_capital_set, full_incident_set, sav
     plt.tight_layout()
     plt.savefig(savepath + 'richest_individual_record' + image_format)
     plt.draw()
-    fig7 = plt.figure(7, figsize=(12, 12), dpi=100)
+    plt.figure(7, figsize=(12, 12), dpi=100)
     plt.subplot(211)
     plt.plot(poorest_record[:, 2])
     plt.title('poorest individual capital record\ntalent:{}'.format(talent_set[poorest_num]))
@@ -158,6 +159,28 @@ def select_richest_poorest(talent_set, final_capital_set, full_incident_set, sav
     plt.title('poorest individual incident record')
     plt.tight_layout()
     plt.savefig(savepath + 'poorest_individual_record' + image_format)
+    plt.draw()
+
+
+def static_multiple_richest_talent(multi_tal_set, savepath, image_format):
+    multi_tal_set = np.array(multi_tal_set)
+    xaxis_min = 0.2
+    xaxis_max = 1.0
+    step = 0.01
+    xaxis_step = 0.05
+    plt.figure(8, figsize=(12, 8), dpi=100)
+    plt.hist(multi_tal_set, bins=np.arange(xaxis_min, xaxis_max, step))
+    plt.xticks(np.arange(xaxis_min, xaxis_max + xaxis_step, xaxis_step), fontsize=14)
+    plt.xlabel('mean = %.2f   standard_variance = %.2f' % (multi_tal_set.mean(), multi_tal_set.std()))
+    plt.title('Multiple richest talent distribution')
+    lnspc = np.linspace(xaxis_min, xaxis_max, len(multi_tal_set))
+    # get mean and standard deviation
+    m, s = stats.norm.fit(multi_tal_set)
+    # now get theoretical values in our interval
+    pdf_g = stats.norm.pdf(lnspc, m, s)
+    plt.plot(lnspc, pdf_g, label="gaussian distribution curve", linestyle='--')  # plot it
+    plt.legend()
+    plt.savefig(savepath + 'static_multi_richest_talent' + image_format)
     plt.draw()
 
 
