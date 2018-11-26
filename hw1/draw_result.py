@@ -103,6 +103,12 @@ def static_capital_talent(cap_set, tal_set, savepath, image_format):
     plt.draw()
 
 
+def static_capital_talentrange(cap_set, tal_set, savepath, image_format):
+    # TODO: Finish a hist gram between capital and talent
+    # TODO: Add x&y axis label to all figures
+    pass
+
+
 def static_capital_incident(cap_set, lucky_set, unlucky_set, savepath, image_format):
     lucky_curve_set = np.concatenate((lucky_set.reshape(1, -1), cap_set.reshape(1, -1)), axis=0)
     unlucky_curve_set = np.concatenate((unlucky_set.reshape(1, -1), cap_set.reshape(1, -1)), axis=0)
@@ -169,7 +175,7 @@ def static_multiple_richest_talent(multi_tal_set, savepath, image_format):
     step = 0.01
     xaxis_step = 0.05
     plt.figure(8, figsize=(12, 8), dpi=100)
-    plt.hist(multi_tal_set, bins=np.arange(xaxis_min, xaxis_max, step))
+    plt.hist(multi_tal_set, bins=np.arange(xaxis_min, xaxis_max, step), normed=True)
     plt.xticks(np.arange(xaxis_min, xaxis_max + xaxis_step, xaxis_step), fontsize=14)
     plt.xlabel('mean = %.2f   standard_variance = %.2f' % (multi_tal_set.mean(), multi_tal_set.std()))
     plt.title('Multiple richest talent distribution')
@@ -178,7 +184,7 @@ def static_multiple_richest_talent(multi_tal_set, savepath, image_format):
     m, s = stats.norm.fit(multi_tal_set)
     # now get theoretical values in our interval
     pdf_g = stats.norm.pdf(lnspc, m, s)
-    plt.plot(lnspc, pdf_g, label="gaussian distribution curve", linestyle='--')  # plot it
+    plt.plot(lnspc, pdf_g, label="gaussian distribution curve", linestyle='--')
     plt.legend()
     plt.savefig(savepath + 'static_multi_richest_talent' + image_format)
     plt.draw()

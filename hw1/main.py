@@ -212,6 +212,7 @@ def main():
         for _ in range(epochs):
             richest_individual_talent_set.append(singlerun(save_result, show_result))
             print('%d epoch finish.' % (_ + 1))
+        np.save(savepath + 'multi_richest_talent.npy', richest_individual_talent_set)
         draw_result.static_multiple_richest_talent(richest_individual_talent_set, savepath, image_format)
 
     multirun(save_result=False, show_result=False, epochs=500)
