@@ -37,7 +37,8 @@ def static_talent(tal_set, savepath, image_format):
     plt.figure(2, figsize=(12, 8), dpi=100)
     plt.hist(tal_set, bins=np.arange(xaxis_min, xaxis_max, step), label=np.arange(xaxis_min, xaxis_max, step))
     plt.xticks(np.arange(xaxis_min, xaxis_max + xaxis_step, xaxis_step), fontsize=14)
-    plt.xlabel('mean = %.2f   standard_variance = %.2f' % (tal_set.mean(), tal_set.std()))
+    plt.xlabel('talent mean = %.2f   standard_variance = %.2f' % (tal_set.mean(), tal_set.std()))
+    plt.ylabel('individual num')
     plt.title('Initial talent distribution')
     plt.savefig(savepath + 'static_talent' + image_format)
     plt.draw()
@@ -62,7 +63,7 @@ def static_capital_individual_num(capital_set, savepath, image_format):
     plt.xticks(np.arange(xaxis_min, xaxis_max + xaxis_step, xaxis_step), fontsize=14)
     plt.xlabel('capital')
     plt.ylabel('individual_num')
-    plt.ylim(1, len(capital_set))
+    plt.ylim(0.1, len(capital_set))
     capital_set_sort = np.sort(capital_set)
     ind_perc = 20
     cap_perc = np.sum(capital_set_sort[-int(len(capital_set) * ind_perc / 100):]) / np.sum(capital_set_sort) * 100
@@ -83,7 +84,8 @@ def static_capital_individual_num(capital_set, savepath, image_format):
     plt.legend(loc="upper right")
     plt.xlim(1, 10 * x_capital_set[-1])
     plt.ylim(0.5, len(capital_set))
-    plt.loglog()
+    plt.xlabel('log_capital')
+    plt.loglog('log_individual_num')
     # plt.tight_layout()
     plt.savefig(savepath + 'static_capital_individual_num' + image_format)
     plt.draw()
@@ -103,10 +105,31 @@ def static_capital_talent(cap_set, tal_set, savepath, image_format):
     plt.draw()
 
 
-def static_capital_talentrange(cap_set, tal_set, savepath, image_format):
-    # TODO: Finish a hist gram between capital and talent
-    # TODO: Add x&y axis label to all figures
-    pass
+def static_avg_capital_talent(cap_set, tal_set, savepath, image_format):
+    xaxis_min = 0.2
+    xaxis_max = 1.0
+    step = 0.05
+    xaxis_step = 0.05
+    avg_talent_set = np.arange(xaxis_min, xaxis_max, step)
+    avg_capital_set = []
+    for i in range(len(avg_talent_set) - 1):
+        num_list = np.where((tal_set > avg_talent_set[i]) &
+                            (tal_set <= avg_talent_set[i + 1]))
+
+        if len(num_list[0]) != 0:
+            avg_capital_set.append(np.average(cap_set[num_list[0]]))
+        else:
+            avg_capital_set.append(0)
+    print(avg_talent_set)
+    plt.figure(5, figsize=(12, 8), dpi=100)
+    plt.bar(avg_talent_set[:-1], avg_capital_set, width=step, align='edge')
+    plt.xticks(np.arange(xaxis_min, xaxis_max + xaxis_step, xaxis_step),
+               fontsize=14)
+    plt.xlabel('talent')
+    plt.ylabel('average_capital')
+    plt.title('Final talent distribution')
+    plt.savefig(savepath + 'static_capital_incident' + image_format)
+    plt.draw()
 
 
 def static_capital_incident(cap_set, lucky_set, unlucky_set, savepath, image_format):
@@ -114,7 +137,7 @@ def static_capital_incident(cap_set, lucky_set, unlucky_set, savepath, image_for
     unlucky_curve_set = np.concatenate((unlucky_set.reshape(1, -1), cap_set.reshape(1, -1)), axis=0)
     lucky_curve_set_sorted = lucky_curve_set[:, lucky_curve_set[0].argsort()]
     unlucky_curve_set_sorted = unlucky_curve_set[:, unlucky_curve_set[0].argsort()]
-    plt.figure(5, figsize=(12, 12), dpi=100)
+    plt.figure(6, figsize=(12, 12), dpi=100)
     plt.subplot(211)
     markerline, stemlines, baseline = plt.stem(lucky_curve_set_sorted[0, :], lucky_curve_set_sorted[1, :],
                                                linefmt='-', markerfmt='.')
@@ -129,6 +152,24 @@ def static_capital_incident(cap_set, lucky_set, unlucky_set, savepath, image_for
     plt.xlabel('unlucky incident num')
     plt.ylabel('capital')
     plt.savefig(savepath + 'static_capital_incident' + image_format)
+    plt.draw()
+
+
+def static_avg_capital_incidentnum(cap_set, tal_set, savepath, image_format):
+    # TODO: Finish a hist gram between capital and talent
+    # TODO: Add x&y axis label to all figures
+    xaxis_min = 0.2
+    xaxis_max = 1.0
+    step = 0.01
+    xaxis_step = 0.05
+    plt.figure(5, figsize=(12, 8), dpi=100)
+    plt.hist(cap_set, bins=np.arange(xaxis_min, xaxis_max, step), label=np.arange(xaxis_min, xaxis_max, step))
+    plt.xticks(np.arange(xaxis_min, xaxis_max + xaxis_step, xaxis_step), fontsize=14)
+    plt.xlabel('talent')
+    plt.ylabel('individual num')
+    plt.title('Initial talent distribution')
+    plt.savefig(savepath + 'static_talent' + image_format)
+    plt.draw()
 
 
 def select_richest_poorest(talent_set, final_capital_set, full_incident_set, savepath, image_format):
@@ -142,7 +183,7 @@ def select_richest_poorest(talent_set, final_capital_set, full_incident_set, sav
     richest_unlucky_record = (richest_record[:, 1] == -1).astype(int)
     poorest_lucky_record = (poorest_record[:, 1] == 1).astype(int)
     poorest_unlucky_record = (poorest_record[:, 1] == -1).astype(int)
-    plt.figure(6, figsize=(12, 12), dpi=100)
+    plt.figure(7, figsize=(12, 12), dpi=100)
     plt.subplot(211)
     plt.plot(richest_record[:, 2])
     plt.title('richest individual capital record\ntalent:{0:.3f}'.format(talent_set[richest_num]))
@@ -154,7 +195,7 @@ def select_richest_poorest(talent_set, final_capital_set, full_incident_set, sav
     plt.tight_layout()
     plt.savefig(savepath + 'richest_individual_record' + image_format)
     plt.draw()
-    plt.figure(7, figsize=(12, 12), dpi=100)
+    plt.figure(8, figsize=(12, 12), dpi=100)
     plt.subplot(211)
     plt.plot(poorest_record[:, 2])
     plt.title('poorest individual capital record\ntalent:{}'.format(talent_set[poorest_num]))
@@ -174,7 +215,7 @@ def static_multiple_richest_talent(multi_tal_set, savepath, image_format):
     xaxis_max = 1.0
     step = 0.01
     xaxis_step = 0.05
-    plt.figure(8, figsize=(12, 8), dpi=100)
+    plt.figure(9, figsize=(12, 8), dpi=100)
     plt.hist(multi_tal_set, bins=np.arange(xaxis_min, xaxis_max, step), normed=True)
     plt.xticks(np.arange(xaxis_min, xaxis_max + xaxis_step, xaxis_step), fontsize=14)
     plt.xlabel('mean = %.2f   standard_variance = %.2f' % (multi_tal_set.mean(), multi_tal_set.std()))

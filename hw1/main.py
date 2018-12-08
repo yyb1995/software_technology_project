@@ -33,7 +33,7 @@ class Individual:
         :param talent_boundary: Judge whether an individual can benefit from an incident
         :return:
         """
-        if np.linalg.norm(self.location - incident_location) <= 1:
+        if np.sum(np.power((self.location - incident_location), 2)) <= 1:
             if is_lucky:
                 # talent_boundary is the lower boundary that an individual can benefit from a lucky incident
                 if self.talent > talent_boundary:
@@ -201,6 +201,7 @@ def main():
             draw_result.static_talent(talent_set, savepath, image_format)
             draw_result.static_capital_individual_num(final_capital_set, savepath, image_format)
             draw_result.static_capital_talent(final_capital_set, talent_set, savepath, image_format)
+            draw_result.static_avg_capital_talent(final_capital_set, talent_set, savepath, image_format)
             draw_result.static_capital_incident(final_capital_set, lucky_incident_set, unlucky_incident_set, savepath,
                                                 image_format)
             draw_result.select_richest_poorest(talent_set, final_capital_set, full_incident_set, savepath, image_format)
@@ -215,7 +216,8 @@ def main():
         np.save(savepath + 'multi_richest_talent.npy', richest_individual_talent_set)
         draw_result.static_multiple_richest_talent(richest_individual_talent_set, savepath, image_format)
 
-    multirun(save_result=False, show_result=False, epochs=500)
+    singlerun(False, False)
+    # multirun(save_result=False, show_result=False, epochs=500)
 
 
 if __name__ == '__main__':
