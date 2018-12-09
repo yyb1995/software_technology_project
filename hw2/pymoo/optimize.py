@@ -38,23 +38,26 @@ def minimize(problem,
 
     Minimization of function of one or more variables, objectives and constraints.
 
-    This is used as a convenience function to execute several algorithms with default settings which turned
-    out to work for a test problems. However, evolutionary computations utilizes the idea of customizing a
-    meta-algorithm. Customizing the algorithm using the object oriented interface is recommended to improve the
-    convergence.
+    This is used as a convenience function to execute several algorithms with
+    default settings which turned out to work for a test problems. However,
+    evolutionary computations utilizes the idea of customizing a meta-algorithm.
+    Customizing the algorithm using the object oriented interface is recommended
+    to improve the convergence.
 
     Parameters
     ----------
 
     problem : pymop.problem
-        A problem object defined using the pymop framework. Either existing test problems or custom problems
-        can be provided. please have a look at the documentation.
+        A problem object defined using the pymop framework. Either existing test
+        problems or custom problems can be provided. please have a look at the
+        documentation.
     method : string
         Algorithm that is used to solve the problem.
     method_args : dict
         Additional arguments to initialize the algorithm object
     termination : tuple
-        The termination criterium that is used to stop the algorithm when the result is satisfying.
+        The termination criterion that is used to stop the algorithm when the
+        result is satisfying.
 
     Returns
     -------

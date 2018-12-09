@@ -119,7 +119,7 @@ if __name__ == '__main__':
 
     print(ref_dirs.shape)
 
-    exit(0)
+
 
     multi_layer = MultiLayerReferenceDirectionFactory()
     multi_layer.add_layer(UniformReferenceDirectionFactory(10, n_partitions=2, scaling=0.5))

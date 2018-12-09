@@ -5,8 +5,9 @@ from matplotlib import animation
 plt.rcParams['font.size'] = 16
 
 
-def plot(savepath, *args, show=True, **kwargs):
+def plot(*args, show=True, **kwargs):
     F = args[0]
+    savepath = './result/'
 
     if F.ndim == 1:
         print("Cannot plot a one dimensional array.")
@@ -15,7 +16,7 @@ def plot(savepath, *args, show=True, **kwargs):
     n_dim = F.shape[1]
 
     if n_dim == 2:
-        plot_2d(savepath, *args, **kwargs)
+        plot_2d(*args, **kwargs)
     elif n_dim == 3:
         plot_3d(*args, **kwargs)
     else:
@@ -27,19 +28,20 @@ def plot(savepath, *args, show=True, **kwargs):
         plt.show()
 
 
-def plot_3d(*args, labels=None):
-    fig = plt.figure()
+def plot_3d(*args):
+    savepath = './result/package/'
+    fig = plt.figure(2, figsize=(7, 6))
     from mpl_toolkits.mplot3d import Axes3D
     ax = fig.add_subplot(111, projection='3d')
 
     for i, F in enumerate(args):
-        if labels:
-            ax.scatter(F[:, 0], F[:, 1], F[:, 2], label=labels[i])
-        else:
-            ax.scatter(F[:, 0], F[:, 1], F[:, 2])
+        ax.scatter(F[:, 0], F[:, 1], F[:, 2])
+        plt.title('pareto front')
+    plt.savefig(savepath + 'dtlz1.png')
 
 
-def plot_2d(savepath, *args):
+def plot_2d(*args):
+    savepath = './result/'
     plt.figure(1, figsize=(7, 6))
     for i, F in enumerate(args):
         plt.scatter(F[:, 0], F[:, 1])

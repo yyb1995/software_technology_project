@@ -73,5 +73,5 @@ def get_termination(_type, *args, pf=None):
     elif _type == 'igd':
         termination = IGDTermination(*args, pf=pf)
     else:
-        raise Exception('Unknown Termination criterium: %s' % _type)
+        raise Exception('Unknown Termination criterion: %s' % _type)
     return termination

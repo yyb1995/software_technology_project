@@ -13,4 +13,4 @@ res = minimize(problem,
                pf=pf,
                save_history=False,
                disp=True)
-plotting.plot(pf, res.F, labels=["Pareto-front", "F"])
+plotting.plot(pf, res.F)
