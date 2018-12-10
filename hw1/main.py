@@ -103,7 +103,7 @@ def main():
     initial_capital = 10
 
     # incident parameter setting
-    incident_num = 500
+    incident_num = 1000
     incident_location_distribution = 'uniform'
     lucky_percentage = 0.5
     move_length = 2
@@ -145,71 +145,6 @@ def main():
                                                     distribution_type='uniform',
                                                     data_type='int',
                                                     min_val=0,
-<<<<<<< HEAD
-                                                    max_val_x=max_boundary_x,
-                                                    max_val_y=max_boundary_y)
-    direction_set = utils.generate_distribution(size=(int(sim_time / time_interval), incident_num),
-                                                distribution_type='uniform',
-                                                data_type='int',
-                                                min_val=0,
-                                                max_val=360)
-
-    # initial the individual and incident instances list
-    individual_set = [Individual(i, talent_set[i], initial_capital, individual_location_set[i])
-                      for i in range(individual_num)]
-    incident_set = ([Incident(j, incident_location_set[j], True)
-                    for j in range(int(incident_num * lucky_percentage))] +
-                    [Incident(k, incident_location_set[k], False)
-                    for k in range(int(incident_num * lucky_percentage), incident_num)])
-
-    # Start the simulation
-    start = time.time()
-    for epoch in range(int(sim_time / time_interval)):
-        # all incidents take a random direction move
-        for inc_index in range(incident_num):
-            incident_set[inc_index].move(length=move_length,
-                                         direction=direction_set[epoch, inc_index],
-                                         max_x_boundary=max_boundary_x,
-                                         max_y_boundary=max_boundary_y)
-            # check each individual whether he/she encounters an incident
-            for ind_index in range(individual_num):
-                individual_set[ind_index].encounter_incident(incident_time=epoch + 1,
-                                                             incident_location=incident_set[inc_index].location,
-                                                             is_lucky=incident_set[inc_index].islucky,
-                                                             talent_boundary=np.random.rand())
-        print('No.%d incidents happen.' % (epoch + 1))
-    end = time.time()
-    runtime = end - start
-    print('Simulation finishes. Total time:%dh%dm%ds' % (runtime // 3600, runtime % 3600 // 60, runtime % 3600 % 60))
-
-    # save result & draw figure
-    final_capital_set = np.array([individual_set[i].capital for i in range(individual_num)])
-    lucky_incident_set = np.array([individual_set[i].lucky_incident_num for i in range(individual_num)])
-    unlucky_incident_set = np.array([individual_set[i].unlucky_incident_num for i in range(individual_num)])
-    full_incident_set = np.array([individual_set[i].get_full_incident_record(int(sim_time / time_interval), initial_capital)
-                                  for i in range(individual_num)])
-    draw_result.save_init(savepath)
-    np.save(savepath + 'talent_set.npy', talent_set)
-    np.save(savepath + 'individual_location_set.npy', individual_location_set)
-    np.save(savepath + 'incident_location_set.npy', incident_location_set)
-    np.save(savepath + 'final_capital_set.npy', final_capital_set)
-    np.save(savepath + 'lucky_incident_set.npy', lucky_incident_set)
-    np.save(savepath + 'unlucky_incident_set.npy', unlucky_incident_set)
-    draw_result.static_initial_location(individual_location_set,
-                                        incident_location_set,
-                                        max_boundary_x,
-                                        max_boundary_y,
-                                        lucky_percentage,
-                                        savepath,
-                                        image_format)
-    draw_result.static_talent(talent_set, savepath, image_format)
-    draw_result.static_capital_individual_num(final_capital_set, savepath, image_format)
-    draw_result.static_capital_talent(final_capital_set, talent_set, savepath, image_format)
-    draw_result.static_capital_incident(final_capital_set, lucky_incident_set, unlucky_incident_set, savepath,
-                                        image_format)
-    draw_result.select_richest_poorest(talent_set, final_capital_set, full_incident_set, savepath, image_format)
-    plt.show()
-=======
                                                     max_val=360)
 
         # initial the individual and incident instances list
@@ -238,16 +173,15 @@ def main():
             print('No.%d incidents happen.' % (epoch + 1))
         end = time.time()
         runtime = end - start
-        print('Simulation finishes. Total time:%dh%dm%ds' % (runtime // 3600, runtime % 3600 // 60,
-                                                             runtime % 3600 % 60))
+        print('Simulation finishes. Total time:%dh%dm%ds' % (runtime // 3600, runtime % 3600 // 60, runtime % 3600 % 60))
 
         # save result & draw figure
         final_capital_set = np.array([individual_set[i].capital for i in range(individual_num)])
         lucky_incident_set = np.array([individual_set[i].lucky_incident_num for i in range(individual_num)])
         unlucky_incident_set = np.array([individual_set[i].unlucky_incident_num for i in range(individual_num)])
-        full_incident_set = np.array([individual_set[i].get_full_incident_record(int(sim_time / time_interval),
-                                                                                 initial_capital)
+        full_incident_set = np.array([individual_set[i].get_full_incident_record(int(sim_time / time_interval), initial_capital)
                                       for i in range(individual_num)])
+        draw_result.save_init(savepath)
         if save_result:
             np.save(savepath + 'talent_set.npy', talent_set)
             np.save(savepath + 'individual_location_set.npy', individual_location_set)
@@ -255,6 +189,8 @@ def main():
             np.save(savepath + 'final_capital_set.npy', final_capital_set)
             np.save(savepath + 'lucky_incident_set.npy', lucky_incident_set)
             np.save(savepath + 'unlucky_incident_set.npy', unlucky_incident_set)
+            np.save(savepath + 'full_incident_set.npy', full_incident_set)
+
         if show_result:
             draw_result.static_initial_location(individual_location_set,
                                                 incident_location_set,
@@ -273,17 +209,8 @@ def main():
             plt.show()
         return individual_set[int(np.argmax(final_capital_set))].talent
 
-    def multirun(save_result=False, show_result=True, epochs=500):
-        richest_individual_talent_set = []
-        for _ in range(epochs):
-            richest_individual_talent_set.append(singlerun(save_result, show_result))
-            print('%d epoch finish.' % (_ + 1))
-        np.save(savepath + 'multi_richest_talent.npy', richest_individual_talent_set)
-        draw_result.static_multiple_richest_talent(richest_individual_talent_set, savepath, image_format)
-
-    singlerun(False, False)
+    singlerun(True, True)
     # multirun(save_result=False, show_result=False, epochs=500)
->>>>>>> master
 
 
 if __name__ == '__main__':
