@@ -189,6 +189,8 @@ class Incident:
 *最终财富分布与天赋的关系*
 
 ![](https://raw.githubusercontent.com/yyb1995/software_technology_project/release/hw1/result/static_capital_talent.png) 
+
+![](https://raw.githubusercontent.com/yyb1995/software_technology_project/release/hw1/result/static_capital_talent_range.png)
 从两个角度分析上图。第一：总体上看，财富较多的群体更多地分布在智商在均值之上的群体中。这个结论说明较高的智商有助于从幸运事件中获利。第二：拥有财富最多的个体智商仅在0.7附近，而智商接近0.9的个体也并没有拥有很多财富。从以上现象可以得出一个结论：智商并不是决定财富数量的一个决定性因素。
 
 ### 4.4 最终财富分布与随机事件的关系

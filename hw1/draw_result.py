@@ -4,6 +4,8 @@ import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 from scipy import stats
 
+plt.rcParams['font.size'] = 16
+
 
 def save_init(savepath):
     if not os.path.exists(savepath):
@@ -85,8 +87,9 @@ def static_capital_individual_num(capital_set, savepath, image_format):
     plt.xlim(1, 10 * x_capital_set[-1])
     plt.ylim(0.5, len(capital_set))
     plt.xlabel('log_capital')
+    plt.ylabel('log_individual_num')
     plt.loglog('log_individual_num')
-    # plt.tight_layout()
+    plt.tight_layout()
     plt.savefig(savepath + 'static_capital_individual_num' + image_format)
     plt.draw()
 
@@ -187,11 +190,15 @@ def select_richest_poorest(talent_set, final_capital_set, full_incident_set, sav
     plt.subplot(211)
     plt.plot(richest_record[:, 2])
     plt.title('richest individual capital record\ntalent:{0:.3f}'.format(talent_set[richest_num]))
+    plt.xlabel('time')
+    plt.ylabel('capital')
     plt.subplot(212)
     plt.plot(richest_lucky_record, color='g', label='lucky')
     plt.plot(richest_unlucky_record, color='r', label='unlucky')
     plt.legend(loc='upper right')
     plt.title('richest individual incident record')
+    plt.xlabel('time')
+    plt.ylabel('incident_num')
     plt.tight_layout()
     plt.savefig(savepath + 'richest_individual_record' + image_format)
     plt.draw()
@@ -199,11 +206,15 @@ def select_richest_poorest(talent_set, final_capital_set, full_incident_set, sav
     plt.subplot(211)
     plt.plot(poorest_record[:, 2])
     plt.title('poorest individual capital record\ntalent:{}'.format(talent_set[poorest_num]))
+    plt.xlabel('time')
+    plt.ylabel('capital')
     plt.subplot(212)
     plt.plot(poorest_lucky_record, color='g', label='lucky')
     plt.plot(poorest_unlucky_record, color='r', label='unlucky')
     plt.legend(loc='upper right')
     plt.title('poorest individual incident record')
+    plt.xlabel('time')
+    plt.ylabel('incident_num')
     plt.tight_layout()
     plt.savefig(savepath + 'poorest_individual_record' + image_format)
     plt.draw()
@@ -246,3 +257,16 @@ def anime_capital_talent():
 
 def anime_capital_lucky_incident():
     pass  # TODO: Implement capital lucky figure movement
+
+
+def main():
+    capital_set = np.load('./result/final_capital_set.npy')
+    talent_set = np.load('./result/talent_set.npy')
+
+    static_talent(talent_set, './result/', '.png')
+    static_capital_individual_num(capital_set, './result/', '.png')
+    static_avg_capital_talent(capital_set, talent_set, './result/', '.png')
+    select_richest_poorest(talent_set, capital_set, )
+
+if __name__ == '__main__':
+    main()

@@ -1,7 +1,24 @@
 # 北京航空航天大学软件技术基础作业二报告
 ------
 
+<!-- TOC -->
 
+- [北京航空航天大学软件技术基础作业二报告](#北京航空航天大学软件技术基础作业二报告)
+    - [1 背景介绍](#1-背景介绍)
+    - [2 仿真实验设计](#2-仿真实验设计)
+        - [2.1 实验环境及参数设置](#21-实验环境及参数设置)
+        - [2.2 测试函数](#22-测试函数)
+    - [3 程序流程](#3-程序流程)
+    - [4 仿真结果和分析](#4-仿真结果和分析)
+        - [4.1 自定义测试函数仿真结果](#41-自定义测试函数仿真结果)
+        - [4.2 Osyczka and Kundu function仿真结果](#42-osyczka-and-kundu-function仿真结果)
+        - [4.3 DTLZ1 function仿真结果](#43-dtlz1-function仿真结果)
+        - [4.4 Viennet function仿真结果](#44-viennet-function仿真结果)
+    - [5 结论](#5-结论)
+    - [6 参考文献及资料](#6-参考文献及资料)
+    - [7 附录](#7-附录)
+
+<!-- /TOC -->
 
 ## 1 背景介绍
 NSGA(Non-dominated sorting genetic algorithm)算法可以用来解决单目标或多目标的优化问题。在多目标优化问题中，通常不能得到单个最优解，取而代之的是一系列非支配解，称为帕累托最优解(Pareto-optimal solutions)或非支配解(nondominated soluitons)。这些解的特点是：无法在改进任何目标函数与的同时不削弱至少一个其他目标函数。帕累托最优解的定义为：
@@ -26,28 +43,13 @@ NSGA系列算法与简单的遗传算法的主要区别在于：该算法在选�
 
 |参数名|参数值|
 |--|--|
-|种群规模|100|
+|种群规模|500|
 |迭代次数|100|
 |随机数种子|5|
 
 ### 2.2 测试函数
-为了测试NSGA算法的性能，本次实验选取了以下测试函数
+为了测试NSGA算法的性能，本次实验选取了以下测试函数：
 1. 自定义测试函数
-$$ 
-f_1(x_1, x_2)={x_1}^4-10{x_1}^2+x_1x_2+{x_2}^4-{x_1}^2{x_2}^2\\
-f_2(x_1, x_2)={x_1}^4+{x_2}^4+x_1x_2-{x_1}^2{x_2}^2\\
-s.t.\quad \begin{cases}
-5\ge x_1\ge-5 \\
-5\ge x_2\ge-5
-\end{cases}
-$$
-
-2. Osyczka and Kundu function
-$$
-f_1(x) = -25(x_1-2)^2-(x_2-2)^2-(x_3-1)^2-(x_4-4)^2-(x_5-1)^2\\
-f_2(x)=\sum\nolimits_{n=1}^{6}x_i^2\\
-s.t. \quad \begin{cases}
-6\ge x_1+x_2\ge2 \\1. 自定义测试函数
 $$ 
 f_1(x_1, x_2)={x_1}^4-10{x_1}^2+x_1x_2+{x_2}^4-{x_1}^2{x_2}^2\\
 f_2(x_1, x_2)={x_1}^4+{x_2}^4+x_1x_2-{x_1}^2{x_2}^2\\
@@ -73,23 +75,7 @@ $$
 3. DTLZ function
 $$
 f_1(x)=\frac{1}{2}x_1(1+g(\vec x))\\
-f_2(x)=\frac{1}{2}(1-x_1)(1+g(\vec x))
-g(\vec x)=100\left\{\left|\vec x\right|+\sum_{x_i\in{\vec x}}(x_1-0.5)^2-\cos\left[20\cdot \pi (x_i-0.5)\right]\right\}\\
-s.t.\quad 1\ge x_i\ge0,i=1,\cdots n
-$$
-
-4. Viennet function
-x_1-x_2\ge-2\\
--x_1+3x_2\ge-2\\
-4-(x_3-3)^2-x_4\ge0\\
-(x_5-3)^2+x_6-4\ge0
-\end{cases}
-$$
-
-3. DTLZ1 function
-$$
-f_1(x)=\frac{1}{2}x_1(1+g(\vec x))\\
-f_2(x)=\frac{1}{2}(1-x_1)(1+g(\vec x))
+f_2(x)=\frac{1}{2}(1-x_1)(1+g(\vec x))\\
 g(\vec x)=100\left\{\left|\vec x\right|+\sum_{x_i\in{\vec x}}(x_1-0.5)^2-\cos\left[20\cdot \pi (x_i-0.5)\right]\right\}\\
 s.t.\quad 1\ge x_i\ge0,i=1,\cdots n
 $$
@@ -103,114 +89,114 @@ s.t.\quad 3\ge x_1, x_2\ge-3
 $$
 
 
-## 3 程序结构
+## 3 程序流程
 本次实验的主程序为`main.py`。其中包括两个函数：`use_custom_function`和`use_package_function`以及一个类`Myproblem`。`Myproblem`中的`_evaluate()`方法用于自定义待求解函数。`use_custom_function`用于求解自定义函数，`use_package_function`用于求解pymop包中实现的待求解函数。一次完整的求解流程为：
 1. 调用`UniformReferenceDirectionDactroy`函数得到种群的初始值分布。在本实验中，初始分布为(0,1)之间的均匀分布。
-2. 在`minimize`函数中，调用`solve`方法进行问题求解。`solve`方法实际上是一个类方法，在不同的优化算法中有不同的实现。
+2. 在`minimize`函数中，调用`./pymoo/model/algrothm.py`中的`solve()`方法进行问题求解。`solve()`方法实际上是一个类方法，在不同的优化算法中有不同的实现。`solve()`方法代码如下：
 ```python
-    def solve(self,
-              problem,
-              termination,
-              seed=1,
-              disp=False,
-              callback=None,
-              save_history=False,
-              pf=None,
-              **kwargs
-              ):
-        """
+def solve(self,
+            problem,
+            termination,
+            seed=1,
+            disp=False,
+            callback=None,
+            save_history=False,
+            pf=None,
+            **kwargs
+            ):
+    """
 
-        Solve a given problem by a given evaluator. The evaluator determines the
-        termination condition and can either have a maximum budget, hypervolume
-        or whatever. The problem can be any problem the algorithm is able to
-        solve.
+    Solve a given problem by a given evaluator. The evaluator determines the
+    termination condition and can either have a maximum budget, hypervolume
+    or whatever. The problem can be any problem the algorithm is able to
+    solve.
 
-        Parameters
-        ----------
+    Parameters
+    ----------
 
-        problem: class
-            Problem to be solved by the algorithm
+    problem: class
+        Problem to be solved by the algorithm
 
-        termination: class
-            object that evaluates and saves the number of evaluations and
-            determines the stopping condition
+    termination: class
+        object that evaluates and saves the number of evaluations and
+        determines the stopping condition
 
-        seed: int
-            Random seed for this run. Before the algorithm starts this seed is
-            set.
+    seed: int
+        Random seed for this run. Before the algorithm starts this seed is
+        set.
 
-        disp : bool
-            If it is true that information during the algorithm execution are
-            displayed.
+    disp : bool
+        If it is true that information during the algorithm execution are
+        displayed.
 
-        callback : func
-            A callback function can be passed that is executed every generation.
-            The parameters for the function are the algorithm itself, the number
-            of evaluations so far and the current population.
+    callback : func
+        A callback function can be passed that is executed every generation.
+        The parameters for the function are the algorithm itself, the number
+        of evaluations so far and the current population.
 
-                def callback(algorithm):
-                    pass
+            def callback(algorithm):
+                pass
 
-        save_history : bool
-            If true, a current snapshot of each generation is saved.
+    save_history : bool
+        If true, a current snapshot of each generation is saved.
 
-        pf : np.array
-            The Pareto-front for the given problem. If provided performance
-            metrics are printed during execution.
+    pf : np.array
+        The Pareto-front for the given problem. If provided performance
+        metrics are printed during execution.
 
-        Returns
-        -------
-        res : dict
-            A dictionary that saves all the results of the algorithm. Also,
-            the history if save_history is true.
+    Returns
+    -------
+    res : dict
+        A dictionary that saves all the results of the algorithm. Also,
+        the history if save_history is true.
 
-        """
+    """
 
-        # set the random seed for generator
-        random.seed(seed)
+    # set the random seed for generator
+    random.seed(seed)
 
-        # the evaluator object which is counting the evaluations
-        self.evaluator = Evaluator()
-        self.problem = problem
-        self.termination = termination
-        self.pf = pf
+    # the evaluator object which is counting the evaluations
+    self.evaluator = Evaluator()
+    self.problem = problem
+    self.termination = termination
+    self.pf = pf
 
-        self.disp = disp
-        self.callback = callback
-        self.save_history = save_history
+    self.disp = disp
+    self.callback = callback
+    self.save_history = save_history
 
-        # call the algorithm to solve the problem
-        pop = self._solve(problem, termination)
+    # call the algorithm to solve the problem
+    pop = self._solve(problem, termination)
 
-        # get the optimal result by filtering feasible and non-dominated
-        opt = pop.copy()
-        opt = opt[opt.collect(lambda ind: ind.feasible)[:, 0]]
+    # get the optimal result by filtering feasible and non-dominated
+    opt = pop.copy()
+    opt = opt[opt.collect(lambda ind: ind.feasible)[:, 0]]
 
-        # if at least one feasible solution was found
-        if len(opt) > 0:
+    # if at least one feasible solution was found
+    if len(opt) > 0:
 
-            if problem.n_obj > 1:
-                I = NonDominatedSorting().do(opt.get("F"),
-                                             only_non_dominated_front=True)
-                opt = opt[I]
-                X, F, CV, G = opt.get("X", "F", "CV", "G")
+        if problem.n_obj > 1:
+            I = NonDominatedSorting().do(opt.get("F"),
+                                            only_non_dominated_front=True)
+            opt = opt[I]
+            X, F, CV, G = opt.get("X", "F", "CV", "G")
 
-            else:
-                opt = pop[np.argmin(pop.get("F"))]
-                X, F, CV, G = opt.X, opt.F, opt.CV, opt.G
         else:
-            opt = None
+            opt = pop[np.argmin(pop.get("F"))]
+            X, F, CV, G = opt.X, opt.F, opt.CV, opt.G
+    else:
+        opt = None
 
-        res = Result(opt, opt is None, "")
-        res.algorithm, res.problem, res.pf = self, problem, pf
-        res.pop = pop
+    res = Result(opt, opt is None, "")
+    res.algorithm, res.problem, res.pf = self, problem, pf
+    res.pop = pop
 
-        if opt is not None:
-            res.X, res.F, res.CV, res.G = X, F, CV, G
+    if opt is not None:
+        res.X, res.F, res.CV, res.G = X, F, CV, G
 
-        res.history = self.history
+    res.history = self.history
 
-        return res
+    return res
 ```
 
 3. 在NSGA3的求解实现中，模型各部分封装成类并放在`./pymoo/operators/`中。在每一次迭代中，先对种群进行交叉：`SimulatedBinaryCrossover`和多项式变异：`PolynomialMutation`。接着需要选择留下的种群并进行重新组合加入下一次迭代。选择的函数为`ReferenceDirectionSurvival.do()`。该函数首先对种群进行非支配排序：`NonDominatedSorting.do()`。在排序后，保留前面的非支配层，从最后一个非支配排序层选择一些个体加入下一次迭代直到数量达到留下数量上限。选择的方法是通过`get_extreme_points_c`得到极值点，再通过`get_nadir_point`得到截距，再通过`associate_to_niches`进行归一化，最后通过`calc_niche_count`得到留下的点。`ReferenceDirectionSurvival.do()`的代码如下：
@@ -284,44 +270,45 @@ def _do(self, pop, n_survive, D=None, **kwargs):
 
 ## 4 仿真结果和分析
 ### 4.1 自定义测试函数仿真结果
-![]()
+![](https://raw.githubusercontent.com/yyb1995/software_technology_project/release/hw2/result/custom/custom_result.png)
 
 ### 4.2 Osyczka and Kundu function仿真结果
+![](https://raw.githubusercontent.com/yyb1995/software_technology_project/release/hw2/result/package/osy.png)
 
 *参考结果：*
-![](https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/Osyczka_and_Kundu_function.pdf/page1-1194px-Osyczka_and_Kundu_function.pdf.jpg)
+![](https://raw.githubusercontent.com/yyb1995/software_technology_project/release/hw2/reference/pareto%20front/osy.jpg)
 ### 4.3 DTLZ1 function仿真结果
 
-![](http://delta.cs.cinvestav.mx/~ccoello/EMOO/testfuncs/mopfigs/dtlz1funb.jpg)
+![](https://raw.githubusercontent.com/yyb1995/software_technology_project/release/hw2/result/package/dtlz1.png)
+
+*参考结果：*
+![](https://raw.githubusercontent.com/yyb1995/software_technology_project/release/hw2/reference/pareto%20front/dtlz1.jpg)
 
 
 
 ### 4.4 Viennet function仿真结果
-
+![](https://raw.githubusercontent.com/yyb1995/software_technology_project/release/hw2/result/custom/Viennet.png)
 
 *参考结果：*
-![](https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Viennet_function.pdf/page1-1194px-Viennet_function.pdf.jpg)
+![](https://raw.githubusercontent.com/yyb1995/software_technology_project/release/hw2/reference/pareto%20front/vie.jpg)
 
+可以看到，以上四个函数的Pareto Front结果与真实结果相近，说明NSGA3算法能够较好地求解多目标优化问题。在运行时间方面，求解过程耗时不超过两分钟。
 
 
 ## 5 结论
-通过对以上实验结果的分析，可以得出以下初步结论：
-   1. 智商并不是影响一个人获得财富的决定性因素
-   2. 幸运程度很大程度上决定了一个人最终能取得财富的多少
-
-我觉得实验结果给我们普通人最大的启发是：我们不必过于羡慕那些天资聪颖的神童。因为，天赋仅仅是成功的一小块拼图而已。此外，实验结论与我们经常听说的一句名言：*天才是由99%的汗水和1%的聪慧组成的* 有些矛盾。这次实验目前暂时没有考虑努力这一因素，但是从现有的结果来看，幸运这一要素对于成功的贡献不可忽视。但是，我想强调的一点是，无论是天赋还是幸运，一定程度上都属于外部因素，是我们很难改变或预见的。那是否应该听天由命，由上天为我们安排人生呢？答案显然是否定的。我们应该充分发挥出人的主观能动性，也就是通过学习和修炼，不断创造出属于自己的财富，提高社会地位，增大努力这一因素在成功里的分量。而且，正如一句话说的那样：*越努力越幸运* 。努力和幸运其实是存在正相关关系的。只有自己准备好了，才能在幸运到来时紧紧地将它抓住。最后，也许努力并不能让我们成为锦鲤或The Chosen One，但努力毫无疑问会让我们活的比现在更好!
+在本次仿真实验中，我主要学习了多目标优化算法NSGA的实现及其应用。这种算法改良自遗传算法，也让我对这种经常在数学建模领域使用的求解算法有了一个初步的了解。在前期资料搜集中，我发现这类算法在机器人控制、机械、电机设计等方面有着广泛的应用，这不仅拓宽了我的视野，还具有多方面的启发意义。在今后的科研工作中，当遇到类似的优化问题时，NSGA3算法能够为高效求解提供很大的帮助。此外，本次实验进一步锻炼了我阅读和编写程序的能力，还锻炼了我书写markdown文档和latex公式的能力。
 
 ## 6 参考文献及资料
 [[1] Deb K, Jain H. An Evolutionary Many-Objective Optimization Algorithm Using Reference-Point-Based Nondominated Sorting Approach, Part I: Solving Problems With Box Constraints[J]. IEEE Transactions on Evolutionary Computation, 2014, 18(4):577-601.](https://www.egr.msu.edu/~kdeb/papers/k2012009.pdf)
 
 [[2] Deb K, Pratap A, Agarwal S, et al. A fast and elitist multiobjective genetic algorithm: NSGA-II[J]. IEEE Transactions on Evolutionary Computation, 2002, 6(2):182-197.](https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=996017)
 
-[[3] NSGA-II explained!](http://oklahomaanalytics.com/data-science-techniques/nsga-ii-explained/)
+[[3] NSGA-II explained!](http://oklahomaanalytics.com/data-science-techhttps://raw.githubusercontent.com/yyb1995/software_technology_project/release/hw2/reference/pareto%20front/vie.jpgniques/nsga-ii-explained/)
 
 [[4] Single- as well as Multi-Objective Optimization Test Problems: ZDT, DTLZ, WFG, BNH, OSY, ...](https://github.com/msu-coinlab/pymop)
 
 [[5] NSGA2, NSGA3, R-NSGA3, MOEAD, GA, DE,](https://github.com/msu-coinlab/pymoo)
 ## 7 附录
-程序代码和仿真结果：[https://github.com/yyb1995/software_technology_project](https://github.com/yyb1995/software_technology_project)
+程序代码和仿真结果：[https://github.com/yyb1995/software_technology_project/tree/release/hw2](https://github.com/yyb1995/software_technology_project/tree/release/hw2)
 
 
