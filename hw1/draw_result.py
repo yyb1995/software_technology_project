@@ -131,7 +131,7 @@ def static_avg_capital_talent(cap_set, tal_set, savepath, image_format):
     plt.xlabel('talent')
     plt.ylabel('average_capital')
     plt.title('Final talent distribution')
-    plt.savefig(savepath + 'static_capital_incident' + image_format)
+    plt.savefig(savepath + 'static_capital_talent_range' + image_format)
     plt.draw()
 
 
@@ -263,10 +263,10 @@ def main():
     capital_set = np.load('./result/final_capital_set.npy')
     talent_set = np.load('./result/talent_set.npy')
 
-    static_talent(talent_set, './result/', '.png')
-    static_capital_individual_num(capital_set, './result/', '.png')
+    # static_talent(talent_set, './result/', '.png')
+    # static_capital_individual_num(capital_set, './result/', '.png')
     static_avg_capital_talent(capital_set, talent_set, './result/', '.png')
-    select_richest_poorest(talent_set, capital_set, )
+    # select_richest_poorest(talent_set, capital_set, )
 
 if __name__ == '__main__':
     main()
